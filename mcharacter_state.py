@@ -39,7 +39,7 @@ def handle_events():
     pass
 
 open_canvas()
-stage_ground = load_image('stay syage.png')
+stage_ground = load_image('stay stage.png')
 character = load_image('main character.png')
 
 running = True
