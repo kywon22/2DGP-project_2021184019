@@ -21,10 +21,10 @@ class TileBackground:
 
     def draw(self):
         self.window_left = clamp(0,
-                                 int(server.boy.x) - self.canvas_width // 2,
+                                 int(server.mcharacter.x) - self.canvas_width // 2,
                                  self.w - self.canvas_width)
         self.window_bottom = clamp(0,
-                                   int(server.boy.y) - self.canvas_height // 2,
+                                   int(server.mcharacter.y) - self.canvas_height // 2,
                                    self.h - self.canvas_height)
 
         # fill here
@@ -45,7 +45,7 @@ class TileBackground:
 class FixedBackground:
 
     def __init__(self):
-        self.image = load_image('stay stage.png')
+        self.image = load_image('stay_stage.png')
         self.canvas_width = get_canvas_width()
         self.canvas_height = get_canvas_height()
         self.w = self.image.w
@@ -59,10 +59,10 @@ class FixedBackground:
 
     def update(self, frame_time):
         self.window_left = clamp(0,
-                                 int(server.boy.x) - self.canvas_width // 2,
+                                 int(server.mcharacter.x) - self.canvas_width // 2,
                                  self.w - self.canvas_width)
         self.window_bottom = clamp(0,
-                                   int(server.boy.y) - self.canvas_height // 2,
+                                   int(server.mcharacter.y) - self.canvas_height // 2,
                                    self.h - self.canvas_height)
 
     def handle_event(self, event):
@@ -75,7 +75,7 @@ class FixedBackground:
 class InfiniteBackground:
 
     def __init__(self):
-        self.image = load_image('stay stage.png')
+        self.image = load_image('stay_stage.png')
         self.canvas_width = get_canvas_width()
         self.canvas_height = get_canvas_height()
         self.w = self.image.w
@@ -89,8 +89,8 @@ class InfiniteBackground:
 
     def update(self):
         # quadrant 3
-        self.q3l = (int(server.boy.x) - self.canvas_width // 2) % self.w
-        self.q3b = (int(server.boy.y) - self.canvas_height // 2) % self.h
+        self.q3l = (int(server.mcharacter.x) - self.canvas_width // 2) % self.w
+        self.q3b = (int(server.mcharacter.y) - self.canvas_height // 2) % self.h
         self.q3w = clamp(0, self.w - self.q3l, self.w)
         self.q3h = clamp(0, self.h - self.q3b, self.h)
         # quadrant 2

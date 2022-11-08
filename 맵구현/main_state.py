@@ -6,7 +6,7 @@ from pico2d import *
 import game_framework
 import game_world
 
-from boy import Boy
+from mcharacter import Mcharacter
 # from background import TileBackground as Background
 # from background import FixedBackground as Background
 from background import InfiniteBackground as Background
@@ -20,8 +20,8 @@ name = "MainState"
 
 
 def enter():
-    server.boy = Boy()
-    game_world.add_object(server.boy, 1)
+    server.mcharacter = Mcharacter()
+    game_world.add_object(server.mcharacter, 1)
 
     server.background = Background()
     game_world.add_object(server.background, 0)
@@ -47,7 +47,7 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
                 game_framework.quit()
         else:
-            server.boy.handle_event(event)
+            server.mcharacter.handle_event(event)
 
 
 def update():

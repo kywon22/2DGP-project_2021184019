@@ -1,3 +1,3 @@
-boy = None
+mcharacter = None
 zombie = None
 background = None

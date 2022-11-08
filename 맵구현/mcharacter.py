@@ -4,21 +4,16 @@ from pico2d import *
 import game_world
 import server
 
-# Boy Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 RUN_SPEED_KMPH = 40.0  # Km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
-# Boy Action Speed
 TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
-
-
-# Boy Event
 RIGHTKEY_DOWN, LEFTKEY_DOWN, UPKEY_DOWN, DOWNKEY_DOWN, RIGHTKEY_UP, LEFTKEY_UP, UPKEY_UP, DOWNKEY_UP, SPACE = range(9)
 
 key_event_table = {
@@ -33,66 +28,60 @@ key_event_table = {
     (SDL_KEYDOWN, SDLK_SPACE): SPACE
 }
 
-
-# Boy States
-
 class WalkingState:
 
-    def enter(boy, event):
+    def enter(mcharacter, event):
         if event == RIGHTKEY_DOWN:
-            boy.x_velocity += RUN_SPEED_PPS
+            mcharacter.x_velocity += RUN_SPEED_PPS
         elif event == RIGHTKEY_UP:
-            boy.x_velocity -= RUN_SPEED_PPS
+            mcharacter.x_velocity -= RUN_SPEED_PPS
         if event == LEFTKEY_DOWN:
-            boy.x_velocity -= RUN_SPEED_PPS
+            mcharacter.x_velocity -= RUN_SPEED_PPS
         elif event == LEFTKEY_UP:
-            boy.x_velocity += RUN_SPEED_PPS
+            mcharacter.x_velocity += RUN_SPEED_PPS
 
         if event == UPKEY_DOWN:
-            boy.y_velocity += RUN_SPEED_PPS
+            mcharacter.y_velocity += RUN_SPEED_PPS
         elif event == UPKEY_UP:
-            boy.y_velocity -= RUN_SPEED_PPS
+            mcharacter.y_velocity -= RUN_SPEED_PPS
         if event == DOWNKEY_DOWN:
-            boy.y_velocity -= RUN_SPEED_PPS
+            mcharacter.y_velocity -= RUN_SPEED_PPS
         elif event == DOWNKEY_UP:
-            boy.y_velocity += RUN_SPEED_PPS
+            mcharacter.y_velocity += RUN_SPEED_PPS
 
 
 
-    def exit(boy, event):
+    def exit(mcharacter, event):
         if event == SPACE:
-            boy.fire_ball()
+            mcharacter.fire_ball()
 
-    def do(boy):
-        boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % FRAMES_PER_ACTION
-        boy.x += boy.x_velocity * game_framework.frame_time
-        boy.y += boy.y_velocity * game_framework.frame_time
+    def do(mcharacter):
+        mcharacter.frame = (mcharacter.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % FRAMES_PER_ACTION
+        mcharacter.x += mcharacter.x_velocity * game_framework.frame_time
+        mcharacter.y += mcharacter.y_velocity * game_framework.frame_time
 
 
-    def draw(boy): #방향 좌표 확인
+    def draw(mcharacter): #방향 좌표 확인
         cx, cy = server.background.canvas_width // 2, server.background.canvas_height // 2
-        #cx, cy = boy.x-server.background.window_left, boy.y-server.background.window_bottom
-        boy.font.draw(cx - 40, cy + 40, '(%d, %d)' % (boy.x, boy.y), (255, 255, 0))
+        mcharacter.font.draw(cx - 40, cy + 40, '(%d, %d)' % (mcharacter.x, mcharacter.y), (255, 255, 0))
 
-        if boy.x_velocity > 0:
-            boy.image.clip_draw(int(boy.frame) * 30, 0, 30, 30, cx, cy)
-            boy.dir = 1
-        elif boy.x_velocity < 0:
-            boy.image.clip_draw(int(boy.frame) * 30, 30, 30, 30, cx, cy)
-            boy.dir = -1
+        if mcharacter.x_velocity > 0:
+            mcharacter.image.clip_draw(int(mcharacter.frame) * 30, 0, 30, 30, cx, cy)
+            mcharacter.dir = 1
+        elif mcharacter.x_velocity < 0:
+            mcharacter.image.clip_draw(int(mcharacter.frame) * 30, 30, 30, 30, cx, cy)
+            mcharacter.dir = -1
         else:
-            # if boy x_velocity == 0
-            if boy.y_velocity > 0 or boy.y_velocity < 0:
-                if boy.dir == 1:
-                    boy.image.clip_draw(int(boy.frame) * 30, 60, 30, 30, cx, cy)
+            if mcharacter.y_velocity > 0 or mcharacter.y_velocity < 0:
+                if mcharacter.dir == 1:
+                    mcharacter.image.clip_draw(int(mcharacter.frame) * 30, 60, 30, 30, cx, cy)
                 else:
-                    boy.image.clip_draw(int(boy.frame) * 30, 0, 30, 30, cx, cy)
+                    mcharacter.image.clip_draw(int(mcharacter.frame) * 30, 0, 30, 30, cx, cy)
             else:
-                # boy is idle
-                if boy.dir == 1:
-                    boy.image.clip_draw(int(boy.frame) * 30, 0, 30, 30, cx, cy)
+                if mcharacter.dir == 1:
+                    mcharacter.image.clip_draw(int(mcharacter.frame) * 30, 0, 30, 30, cx, cy)
                 else:
-                    boy.image.clip_draw(int(boy.frame) * 30, 90, 30, 30, cx, cy)
+                    mcharacter.image.clip_draw(int(mcharacter.frame) * 30, 90, 30, 30, cx, cy)
 
 
 next_state_table = {
@@ -102,11 +91,10 @@ next_state_table = {
 }
 
 
-class Boy:
+class Mcharacter:
 
     def __init__(self):
-        # Boy is only once created, so instance image loading is fine
-        self.image = load_image('main character.png')
+        self.image = load_image('main_character.png')
         self.font = load_font('ENCR10B.TTF', 16)
         self.dir = 1
         self.x_velocity, self.y_velocity = 0, 0
