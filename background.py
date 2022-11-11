@@ -26,8 +26,6 @@ class TileBackground:
         self.window_bottom = clamp(0,
                                    int(server.mcharacter.y) - self.canvas_height // 2,
                                    self.h - self.canvas_height)
-
-        # fill here
         tile_left = self.window_left // 800
         tile_right = min((self.window_left + self.canvas_width) // 800 + 1, 3)
         left_offset = self.window_left % 800
@@ -45,7 +43,7 @@ class TileBackground:
 class FixedBackground:
 
     def __init__(self):
-        self.image = load_image('stay_stage.png')
+        self.image = load_image('testground.png')
         self.canvas_width = get_canvas_width()
         self.canvas_height = get_canvas_height()
         self.w = self.image.w
@@ -75,7 +73,7 @@ class FixedBackground:
 class InfiniteBackground:
 
     def __init__(self):
-        self.image = load_image('stay_stage.png')
+        self.image = load_image('testground.png')
         self.canvas_width = get_canvas_width()
         self.canvas_height = get_canvas_height()
         self.w = self.image.w

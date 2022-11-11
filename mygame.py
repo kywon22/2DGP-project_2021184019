@@ -1,9 +1,8 @@
-import pico2d
 import game_framework
-import mcharacter_state
-import logo_state
-#import item_state
+import pico2d
 
-pico2d.open_canvas()
-game_framework.run(mcharacter_state)
+import main_state
+
+pico2d.open_canvas(455, 479)
+game_framework.run(main_state)
 pico2d.close_canvas()

@@ -1,8 +1,9 @@
 import game_framework
 from pico2d import *
-
 import game_world
+from ball import Ball
 import server
+
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 RUN_SPEED_KMPH = 40.0  # Km / Hour
@@ -14,8 +15,8 @@ TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
-RIGHTKEY_DOWN, LEFTKEY_DOWN, UPKEY_DOWN, DOWNKEY_DOWN, RIGHTKEY_UP, LEFTKEY_UP, UPKEY_UP, DOWNKEY_UP, SPACE = range(9)
 
+RIGHTKEY_DOWN, LEFTKEY_DOWN, UPKEY_DOWN, DOWNKEY_DOWN, RIGHTKEY_UP, LEFTKEY_UP, UPKEY_UP, DOWNKEY_UP, SPACE = range(9)
 key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT): RIGHTKEY_DOWN,
     (SDL_KEYDOWN, SDLK_LEFT): LEFTKEY_DOWN,
@@ -28,8 +29,8 @@ key_event_table = {
     (SDL_KEYDOWN, SDLK_SPACE): SPACE
 }
 
-class WalkingState:
 
+class WalkingState:
     def enter(mcharacter, event):
         if event == RIGHTKEY_DOWN:
             mcharacter.x_velocity += RUN_SPEED_PPS
@@ -49,9 +50,8 @@ class WalkingState:
         elif event == DOWNKEY_UP:
             mcharacter.y_velocity += RUN_SPEED_PPS
 
-
-
     def exit(mcharacter, event):
+        mcharacter.face_x = mcharacter.x_velocity
         if event == SPACE:
             mcharacter.fire_ball()
 
@@ -61,10 +61,9 @@ class WalkingState:
         mcharacter.y += mcharacter.y_velocity * game_framework.frame_time
 
 
-    def draw(mcharacter): #방향 좌표 확인
+    def draw(mcharacter): #방향 좌표 확인해야함
         cx, cy = server.background.canvas_width // 2, server.background.canvas_height // 2
         mcharacter.font.draw(cx - 40, cy + 40, '(%d, %d)' % (mcharacter.x, mcharacter.y), (255, 255, 0))
-
         if mcharacter.x_velocity > 0:
             mcharacter.image.clip_draw(int(mcharacter.frame) * 30, 0, 30, 30, cx, cy)
             mcharacter.dir = 1
@@ -76,12 +75,12 @@ class WalkingState:
                 if mcharacter.dir == 1:
                     mcharacter.image.clip_draw(int(mcharacter.frame) * 30, 60, 30, 30, cx, cy)
                 else:
-                    mcharacter.image.clip_draw(int(mcharacter.frame) * 30, 0, 30, 30, cx, cy)
-            else:
-                if mcharacter.dir == 1:
-                    mcharacter.image.clip_draw(int(mcharacter.frame) * 30, 0, 30, 30, cx, cy)
-                else:
                     mcharacter.image.clip_draw(int(mcharacter.frame) * 30, 90, 30, 30, cx, cy)
+            else:
+                if mcharacter.dir == -1:
+                    mcharacter.image.clip_draw(int(mcharacter.frame) * 30, 90, 30, 30, cx, cy)
+                else:
+                    mcharacter.image.clip_draw(int(mcharacter.frame) * 30, 60, 30, 30, cx, cy)
 
 
 next_state_table = {
@@ -102,7 +101,7 @@ class Mcharacter:
         self.event_que = []
         self.cur_state = WalkingState
         self.cur_state.enter(self, None)
-        self.x, self.y = 910, 600
+        self.x, self.y = 300, 300
 
 
     def get_bb(self):
@@ -134,3 +133,7 @@ class Mcharacter:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
 
+    def fire_ball(self):
+        print('FIRE BALL')
+        ball = Ball(self.x, self.y, self.face_x*2)
+        game_world.add_object(ball, 1)
