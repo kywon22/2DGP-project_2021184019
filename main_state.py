@@ -7,7 +7,7 @@ import game_framework
 import game_world
 
 from mcharacter import Mcharacter
-# from scharacter import Scharacter
+from monster import Zombie
 # from background import TileBackground as Background
 # from background import FixedBackground as Background
 from background import InfiniteBackground as Background
@@ -22,9 +22,9 @@ name = "MainState"
 
 def enter():
     server.mcharacter = Mcharacter()
-    # server.scharacter = Scharacter()
+    server.zombie = Zombie()
     game_world.add_object(server.mcharacter, 1)
-    # game_world.add_object(server.scharacter, 1)
+    game_world.add_object(server.zombie, 1)
     server.background = Background()
     game_world.add_object(server.background, 0)
 
