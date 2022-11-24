@@ -22,14 +22,14 @@ FRAMES_PER_ACTION = 10
 animation_names = ['Attack', 'Dead', 'Idle', 'Walk']
 
 
-class Zombie:
+class Monster:
     images = None
 
     def load_images(self):
-        if Zombie.images == None:
-            Zombie.images = {}
+        if Monster.images == None:
+            Monster.images = {}
             for name in animation_names:
-                Zombie.images[name] = [load_image("./zombiefiles/female/"+ name + " (%d)" % i + ".png") for i in range(1, 11)]
+                Monster.images[name] = [load_image("./zombiefiles/female/"+ name + " (%d)" % i + ".png") for i in range(1, 11)]
 
 
     def prepare_patrol_points(self):
@@ -152,14 +152,14 @@ class Zombie:
     def draw(self):
         if math.cos(self.dir) < 0:
             if self.speed == 0:
-                Zombie.images['Idle'][int(self.frame)].composite_draw(0, 'h', self.x, self.y, 100, 100)
+                Monster.images['Idle'][int(self.frame)].composite_draw(0, 'h', self.x, self.y, 100, 100)
             else:
-                Zombie.images['Walk'][int(self.frame)].composite_draw(0, 'h', self.x, self.y, 100, 100)
+                Monster.images['Walk'][int(self.frame)].composite_draw(0, 'h', self.x, self.y, 100, 100)
         else:
             if self.speed == 0:
-                Zombie.images['Idle'][int(self.frame)].draw(self.x, self.y, 100, 100)
+                Monster.images['Idle'][int(self.frame)].draw(self.x, self.y, 100, 100)
             else:
-                Zombie.images['Walk'][int(self.frame)].draw(self.x, self.y, 100, 100)
+                Monster.images['Walk'][int(self.frame)].draw(self.x, self.y, 100, 100)
 
     def handle_event(self, event):
         pass
